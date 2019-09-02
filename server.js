@@ -5,7 +5,7 @@ mongoose.pluralize(null);
 const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-mongoose.connect('mongodb://localhost/test', { useNewUrlParser: true });
+mongoose.connect('mongodb://anjumzaki:anjuzmaki123@ds351987.mlab.com:51987/articledata', { useNewUrlParser: true });
 var db = mongoose.connection;
 db.once('open', function () { });
 var key = 123;
