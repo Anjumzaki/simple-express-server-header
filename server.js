@@ -11,9 +11,18 @@ db.once('open', function () { });
 var key = 123;
 
 app.use(function (req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
+      res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    if(req.headers.key="abc123"){
     next();
+    }
+    else{
+        res.status(404).send({
+            success: 'false',
+            message: 'key is not correct',
+            article,
+        })
+    }
     });
 var articleSchema = new mongoose.Schema({
     title: String,
@@ -28,6 +37,8 @@ var articleSchema = new mongoose.Schema({
 var Article = mongoose.model('ArticleData', articleSchema);
 
 app.post('/api/add', async (req, res) => {
+
+    
     const article = new Article({
         title: req.body.title,
         author: req.body.author,
@@ -43,7 +54,7 @@ app.post('/api/add', async (req, res) => {
             message: 'article Created',
             article,
         })
-    }); const PORT = 2000;
+    }); 
 
 app.get("/api/get", async (req, res) => {
     var result = await Article.find().exec();
@@ -73,10 +84,9 @@ app.get("/api/edit/:articleId", async(req,res) =>{
                     user,
                 })
         });
-        });
+    });
 
-
-
+const PORT = 2000;
 app.listen(PORT, () => {
     console.log(`server running on port ${PORT}`)
 });
