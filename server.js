@@ -20,14 +20,14 @@ app.use(function (req, res, next) {
         res.status(404).send({
             success: 'false',
             message: 'key is not correct',
-                })
+        })
     }
 });
 var articleSchema = new mongoose.Schema({
-    title: String,
-    author: String,
-    data: String,
-    genre: String,
+    articleNumber: Number,
+    articleName: String,
+    number: Number,
+    articlePrice: Number,
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
 },
@@ -37,11 +37,10 @@ var Article = mongoose.model('ArticleData', articleSchema);
 
 app.post('/api/add', async (req, res) => {
     const article = new Article({
-        title: req.body.title,
-        author: req.body.author,
-        data: req.body.data,
-        genre: req.body.genre,
-
+        articleNumber: req.body.articleNumber,
+        articleName: req.body.articleName,
+        number: req.body.data,
+        articlePrice: req.body.articlePrice,
     });
     article.save(function (err) {
         if (err) return console.error(err);
@@ -53,7 +52,17 @@ app.post('/api/add', async (req, res) => {
 
     })
 });
-
+app.get("/api/edit/:articleId", async (req, res) => {
+    Article.findByIdAndUpdate(req.params.articleId, {
+        $set: { articleNumber: req.body.articleNumber, articleName: req.body.articleName, number: req.body.number, articlePrice: req.body.articlePrice }
+    }, { upsert: true }, function (err, user) {
+        res.status(200).send({
+            success: 'true',
+            message: 'article Created',
+            user,
+        })
+    });
+});
 
 
 
@@ -73,28 +82,7 @@ app.get("/api/get", async (req, res) => {
     })
 });
 
-app.get("/api/edit/:articleId", async (req, res) => {
-    Article.findByIdAndUpdate(req.params.articleId, {
-        $set: { title: req.body.title, author: req.body.author, data: req.body.data, author: req.body.genre }
-    }, { upsert: true }, function (err, user) {
-        res.status(200).send({
-            success: 'true',
-            message: 'article Created',
-            user,
-        })
-    });
-});
-app.post("/api/edit/:articleId", async (req, res) => {
-    Article.findByIdAndUpdate(req.params.articleId, {
-        $set: { title: req.body.title, author: req.body.author, data: req.body.data, author: req.body.genre }
-    }, { upsert: true }, function (err, user) {
-        res.status(200).send({
-            success: 'true',
-            message: 'article Created',
-            user,
-        })
-    });
-});
+
 
 const PORT = 2000;
 app.listen(PORT, () => {
